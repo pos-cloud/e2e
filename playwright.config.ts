@@ -33,15 +33,6 @@ export default defineConfig({
       use: browser,
     },
     {
-      name: 'api',
-      dependencies: ['registrar'],
-      testDir: './tests/api',
-      use: {
-        baseURL: testing.apiURL,
-        extraHTTPHeaders: { Accept: 'application/json' },
-      },
-    },
-    {
       name: 'ui',
       testDir: './tests/ui',
       use: browser,

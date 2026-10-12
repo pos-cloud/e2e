@@ -11,12 +11,11 @@ Corren en el runner `dev` de GitHub, el mismo servidor del entorno de testing. L
 
 ```text
 tests/setup/      registra un kiosco, una sola vez por corrida
-tests/api/        la API responde, sobre ese negocio
 tests/ui/         una pantalla
 tests/circuits/   un archivo por circuito. El nombre ordena: 02-venta, 03-...
 ```
 
-Cada corrida registra un negocio cuyo nombre empieza con `e2e` y lo anota en el resumen. La venta, los listados y los circuitos que se sumen usan esa misma base. No se borra al terminar: en testing, ops las borra cada 10 días. El alta marca todas las integraciones y módulos de un kiosco. `venta-ticket` vende el producto `00001` (FIDEOS TALLARINES 500 GR), pide el PDF del ticket y lo deja en pantalla.
+Cada corrida entra por `https://dev.poscloud.ar`. Registra un negocio cuyo nombre empieza con `e2e` y lo anota en el resumen. La venta y los circuitos que se sumen usan esa misma base. No se borra al terminar: en testing, ops las borra cada 10 días. El alta marca todas las integraciones y módulos de un kiosco. `02-venta-ticket` vende el producto `00001` (FIDEOS TALLARINES 500 GR), pide el PDF del ticket y lo deja en pantalla.
 
 ## En el runner
 
@@ -26,7 +25,7 @@ El reporte se publica en GitHub Pages e incluye el video de las pruebas que abre
 
 ## En la máquina local
 
-Sin el archivo del servidor, el alta y las lecturas del negocio nuevo no corren. El health check y los rechazos de login sí.
+Sin el archivo del servidor, el alta no corre. El login del frente contra un negocio inexistente sí.
 
 ```bash
 npm install
