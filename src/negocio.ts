@@ -11,7 +11,10 @@ export type Negocio = {
   user: 'admin';
 };
 
-/** Nombre de base: minúsculas y números, como lo normaliza el registro, máximo 20. */
+/**
+ * Nombre de base: minúsculas y números, máximo 20, como lo normaliza el registro.
+ * Empieza con e2e. El cron de ops borra en testing toda base con ese prefijo.
+ */
 export function buildNegocio(): Negocio {
   const stamp = Date.now().toString(36);
   const extra = Math.random().toString(36).slice(2, 5);
