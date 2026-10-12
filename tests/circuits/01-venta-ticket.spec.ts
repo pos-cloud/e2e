@@ -15,6 +15,29 @@ test('vende el fideo del kiosco, imprime el ticket y lo muestra', async ({ page 
 
   await page.addInitScript(() => {
     window.print = () => undefined;
+
+    const mostrar = (frame: HTMLIFrameElement) => {
+      frame.style.setProperty('visibility', 'visible', 'important');
+      frame.style.setProperty('opacity', '1', 'important');
+      frame.style.setProperty('position', 'fixed', 'important');
+      frame.style.setProperty('inset', '0', 'important');
+      frame.style.setProperty('width', '100vw', 'important');
+      frame.style.setProperty('height', '100vh', 'important');
+      frame.style.setProperty('z-index', '2147483647', 'important');
+      frame.style.setProperty('border', '0', 'important');
+      frame.style.setProperty('background', '#fff', 'important');
+    };
+
+    const quitar = Element.prototype.remove;
+    Element.prototype.remove = function () {
+      if (this.id === 'printJS') return;
+      return quitar.call(this);
+    };
+
+    new MutationObserver(() => {
+      const frame = document.getElementById('printJS');
+      if (frame instanceof HTMLIFrameElement) mostrar(frame);
+    }).observe(document.documentElement, { childList: true, subtree: true, attributes: true });
   });
 
   const login = await iniciarSesion(page, negocio, password);
@@ -58,22 +81,10 @@ test('vende el fideo del kiosco, imprime el ticket y lo muestra', async ({ page 
   const pdf = await ticket.body();
   expect(ticket.status(), pdf.subarray(0, 180).toString('utf8')).toBe(200);
   expect(pdf.subarray(0, 5).toString('utf8')).toBe('%PDF-');
-
   await testInfo.attach('ticket.pdf', { body: pdf, contentType: 'application/pdf' });
 
-  await page.route('https://ticket.e2e.local/ticket.pdf', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/pdf',
-      headers: { 'Content-Disposition': 'inline; filename="ticket.pdf"' },
-      body: pdf,
-    });
-  });
-
-  await page.goto('https://ticket.e2e.local/ticket.pdf');
-  await expect(page).toHaveURL(/ticket\.pdf$/);
+  const visor = page.locator('#printJS');
+  await expect(visor).toBeVisible({ timeout: 30_000 });
+  await expect.poll(async () => visor.getAttribute('src')).toMatch(/^blob:/);
   await page.waitForTimeout(2_000);
-
-  const pantalla = await page.screenshot({ fullPage: true });
-  await testInfo.attach('ticket-pantalla.png', { body: pantalla, contentType: 'image/png' });
 });
