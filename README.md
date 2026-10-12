@@ -10,13 +10,13 @@ Corren en el runner `dev` de GitHub, el mismo servidor del entorno de testing. L
 ## Carpetas
 
 ```text
-tests/api/        la API responde
+tests/setup/      registra un kiosco, una sola vez por corrida
+tests/api/        la API responde, sobre ese negocio
 tests/ui/         una pantalla
-tests/circuits/   un archivo por circuito de negocio
-tests/fixtures/   negocio nuevo para los circuitos que necesitan datos
+tests/circuits/   un archivo por circuito. El nombre ordena: 02-venta, 03-...
 ```
 
-Cada circuito que necesite datos crea un negocio cuyo nombre empieza con `e2e`. Si la prueba pasa, borra la base. Si falla, la deja creada: el nombre queda en el resumen de la corrida y en el reporte, para entrar en `https://dev.poscloud.ar/login` como `admin`. En testing, ops borra todas las bases `e2e` cada 10 días. El alta marca todas las integraciones y módulos de un kiosco. `venta-ticket` vende el producto `00001` (FIDEOS TALLARINES 500 GR), pide el PDF del ticket y lo deja en pantalla: el video y el PDF quedan en el reporte.
+Cada corrida registra un negocio cuyo nombre empieza con `e2e` y lo anota en el resumen. La venta, los listados y los circuitos que se sumen usan esa misma base. No se borra al terminar: en testing, ops las borra cada 10 días. El alta marca todas las integraciones y módulos de un kiosco. `venta-ticket` vende el producto `00001` (FIDEOS TALLARINES 500 GR), pide el PDF del ticket y lo deja en pantalla.
 
 ## En el runner
 

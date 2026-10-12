@@ -21,7 +21,20 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   projects: [
     {
+      name: 'registrar',
+      testDir: './tests/setup',
+      retries: 0,
+      use: browser,
+    },
+    {
+      name: 'circuits',
+      dependencies: ['registrar'],
+      testDir: './tests/circuits',
+      use: browser,
+    },
+    {
       name: 'api',
+      dependencies: ['registrar'],
       testDir: './tests/api',
       use: {
         baseURL: testing.apiURL,
@@ -31,11 +44,6 @@ export default defineConfig({
     {
       name: 'ui',
       testDir: './tests/ui',
-      use: browser,
-    },
-    {
-      name: 'circuits',
-      testDir: './tests/circuits',
       use: browser,
     },
   ],
