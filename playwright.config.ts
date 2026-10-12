@@ -7,6 +7,7 @@ const browser = {
   baseURL: testing.webURL,
   trace: 'retain-on-failure' as const,
   screenshot: 'only-on-failure' as const,
+  video: 'on' as const,
 };
 
 export default defineConfig({

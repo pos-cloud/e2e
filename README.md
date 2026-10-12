@@ -22,7 +22,7 @@ Cada circuito que necesite datos crea su negocio y lo borra al terminar.
 
 El workflow `.github/workflows/e2e.yml` se dispara con un push a `main` y también a mano. El runner es Debian 11 y Playwright ya no instala Chromium ahí, así que las pruebas corren en la imagen `mcr.microsoft.com/playwright:v1.64.0-jammy`, que trae el navegador. El contenedor lee `/home/api-core/.env` del servidor.
 
-El reporte se publica en GitHub Pages. El link queda en la corrida, en el environment `github-pages`, y cada corrida reemplaza el anterior. El repo tiene que ser público y Pages tiene que estar en Source: GitHub Actions.
+El reporte se publica en GitHub Pages e incluye el video de las pruebas que abren el navegador. El link queda en la corrida, en el environment `github-pages`, y cada corrida reemplaza el anterior. El repo tiene que ser público y Pages tiene que estar en Source: GitHub Actions.
 
 ## En la máquina local
 

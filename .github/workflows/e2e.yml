@@ -28,6 +28,7 @@ jobs:
         run: grep -q '^PASS_ADMIN=.' /home/api-core/.env
 
       - name: Pruebas
+        id: tests
         run: |
           docker run --rm \
             --network host \
@@ -40,7 +41,7 @@ jobs:
 
       - name: Subir reporte
         id: pages
-        if: always() && hashFiles('playwright-report/index.html') != ''
+        if: always() && steps.tests.conclusion != 'skipped' && hashFiles('playwright-report/index.html') != ''
         uses: actions/upload-pages-artifact@v3
         with:
           path: playwright-report
