@@ -21,6 +21,14 @@ jobs:
       pages: ${{ steps.pages.outcome }}
 
     steps:
+      - name: Permisos del workspace
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/work" \
+            --entrypoint bash \
+            mcr.microsoft.com/playwright:v1.64.0-jammy \
+            -lc "chown -R $(id -u):$(id -g) /work"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -38,6 +46,15 @@ jobs:
             -w /work \
             mcr.microsoft.com/playwright:v1.64.0-jammy \
             -lc "npm ci && npx playwright test"
+
+      - name: Devolver permisos
+        if: always()
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/work" \
+            --entrypoint bash \
+            mcr.microsoft.com/playwright:v1.64.0-jammy \
+            -lc "chown -R $(id -u):$(id -g) /work"
 
       - name: Subir reporte
         id: pages
