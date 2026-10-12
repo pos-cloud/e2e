@@ -24,8 +24,8 @@ export function buildNegocio(): Negocio {
     phone: '3510000000',
     country: 'AR',
     businessModel: 'kiosco',
-    modules: ['ventas', 'stock', 'caja'],
-    integrations: [],
+    modules: ['ventas', 'compras', 'stock', 'caja', 'produccion', 'turnos', 'suscripciones'],
+    integrations: ['tienda-nube', 'woo-commerce', 'facturacion-electronica', 'mercado-libre'],
     user: 'admin',
   };
 }

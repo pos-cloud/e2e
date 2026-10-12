@@ -16,7 +16,7 @@ tests/circuits/   un archivo por circuito de negocio
 tests/fixtures/   negocio nuevo para los circuitos que necesitan datos
 ```
 
-Cada circuito que necesite datos crea su negocio y lo borra al terminar.
+Cada circuito que necesite datos crea su negocio y lo borra al terminar. El alta marca todas las integraciones y módulos de un kiosco. `venta-ticket` vende el producto `00001` (FIDEOS TALLARINES 500 GR), pide el PDF del ticket y lo deja en pantalla: el video y el PDF quedan en el reporte.
 
 ## En el runner
 
