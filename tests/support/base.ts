@@ -16,8 +16,11 @@ export async function cerrarNegocio(
 ): Promise<void> {
   if (!database) return;
 
-  if (testInfo.status !== testInfo.expectedStatus) {
-    conservar(database);
+  const fallo = testInfo.status !== testInfo.expectedStatus;
+  const vaAReintentar = fallo && testInfo.retry < testInfo.project.retries;
+
+  if (fallo && !vaAReintentar) {
+    conservar(database, testInfo.title);
     return;
   }
 
@@ -34,14 +37,17 @@ export async function cerrarNegocio(
   expect(login.body.message).toBe('El negocio no existe');
 }
 
-export function conservar(database: string): void {
+export function conservar(database: string, prueba?: string): void {
   const texto = [
     `BASE CONSERVADA ${database}`,
+    prueba ? `Prueba: ${prueba}` : '',
     `Entrá en ${testing.webURL}/login`,
     `Negocio: ${database}`,
     'Usuario: admin',
     'Clave: PASS_ADMIN del servidor',
-  ].join('\n');
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   console.log(`\n${texto}\n`);
   fs.mkdirSync(path.dirname(aviso), { recursive: true });
