@@ -15,7 +15,7 @@ tests/ui/         una pantalla
 tests/circuits/   un archivo por circuito. El nombre ordena: 02-venta, 03-...
 ```
 
-Cada corrida entra por `https://dev.poscloud.ar`. Registra un negocio cuyo nombre empieza con `e2e` y lo anota en el resumen. La venta y los circuitos que se sumen usan esa misma base. No se borra al terminar: en testing, ops las borra cada 10 días. El alta marca todas las integraciones y módulos de un kiosco. `02-venta-ticket` vende el producto `00001` (FIDEOS TALLARINES 500 GR), pide el PDF del ticket y lo deja en pantalla.
+Cada corrida entra por `https://dev.poscloud.ar`. Registra un negocio cuyo nombre empieza con `e2e` y lo anota en el resumen. La venta y los circuitos que se sumen usan esa misma base. No se borra al terminar: en testing, ops las borra todos los días a las 5:00. El alta marca todas las integraciones y módulos de un kiosco. `02-venta-ticket` vende el producto `00001` (FIDEOS TALLARINES 500 GR), pide el PDF del ticket y lo deja en pantalla.
 
 ## En el runner
 
