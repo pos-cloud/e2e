@@ -13,22 +13,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Dependencias
-        run: npm ci
-
-      - name: Chromium
-        run: npx playwright install --with-deps chromium
-
       - name: PASS_ADMIN del servidor
         run: grep -q '^PASS_ADMIN=.' /home/api-core/.env
 
       - name: Pruebas
-        run: npm test
+        run: |
+          docker run --rm \
+            --network host \
+            --entrypoint bash \
+            -v "${{ github.workspace }}:/work" \
+            -v /home/api-core/.env:/home/api-core/.env:ro \
+            -w /work \
+            mcr.microsoft.com/playwright:v1.64.0-jammy \
+            -lc "npm ci && npx playwright test"
 
       - name: Reporte
         if: always()

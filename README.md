@@ -20,7 +20,7 @@ Cada circuito que necesite datos crea su negocio y lo borra al terminar.
 
 ## En el runner
 
-El workflow `.github/workflows/e2e.yml` se dispara con un push a `main` y también a mano. Instala Chromium en el runner y ejecuta `npm test`.
+El workflow `.github/workflows/e2e.yml` se dispara con un push a `main` y también a mano. El runner es Debian 11 y Playwright ya no instala Chromium ahí, así que las pruebas corren en la imagen `mcr.microsoft.com/playwright:v1.64.0-jammy`, que trae el navegador. El contenedor lee `/home/api-core/.env` del servidor.
 
 ## En la máquina local
 
