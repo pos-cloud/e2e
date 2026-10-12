@@ -57,6 +57,16 @@ jobs:
             mcr.microsoft.com/playwright:v1.64.0-jammy \
             -lc "chown -R $(id -u):$(id -g) /work"
 
+      - name: Bases para revisar
+        if: always() && hashFiles('test-results/bases-conservadas.txt') != ''
+        run: |
+          {
+            echo "### Bases para revisar"
+            echo '```'
+            cat test-results/bases-conservadas.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Subir reporte
         id: pages
         if: always() && steps.tests.conclusion != 'skipped' && hashFiles('playwright-report/index.html') != ''

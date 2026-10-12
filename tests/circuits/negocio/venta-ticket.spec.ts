@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { PosApi } from '../../../src/api';
 import { serverEnv } from '../../../src/config';
 import { buildNegocio } from '../../../src/negocio';
+import { cerrarNegocio } from '../../support/base';
 import { crearKiosco, iniciarSesion } from '../../support/kiosco';
 
 const PRODUCTO = '00001';
@@ -13,28 +13,16 @@ test.skip(!serverEnv(), 'Corre en el runner dev, que lee /home/api-core/.env');
 test.describe('Venta e impresión de ticket', () => {
   let database = '';
 
-  test.afterEach(async ({ request }) => {
-    if (!database) return;
-
+  test.afterEach(async ({ request }, testInfo) => {
     const nombre = database;
     database = '';
-
-    const api = new PosApi(request);
-    const removed = await api.deleteNegocio(nombre);
-    expect(removed.response.status(), JSON.stringify(removed.body)).toBe(200);
-
-    const login = await api.login({
-      database: nombre,
-      user: 'admin',
-      password: serverEnv()!.passAdmin,
-    });
-    expect(login.response.status()).toBe(404);
-    expect(login.body.message).toBe('El negocio no existe');
+    await cerrarNegocio(request, testInfo, nombre);
   });
 
   test('vende el fideo del kiosco, imprime el ticket y lo muestra', async ({ page }, testInfo) => {
     const negocio = buildNegocio();
     const password = serverEnv()!.passAdmin;
+    database = negocio.database;
 
     await page.addInitScript(() => {
       window.print = () => undefined;
