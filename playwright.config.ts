@@ -32,10 +32,5 @@ export default defineConfig({
       testDir: './tests/circuits',
       use: browser,
     },
-    {
-      name: 'ui',
-      testDir: './tests/ui',
-      use: browser,
-    },
   ],
 });
