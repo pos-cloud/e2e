@@ -1,0 +1,41 @@
+import { defineConfig, devices } from '@playwright/test';
+
+import { testing } from './src/config';
+
+const browser = {
+  ...devices['Desktop Chrome'],
+  baseURL: testing.webURL,
+  trace: 'retain-on-failure' as const,
+  screenshot: 'only-on-failure' as const,
+};
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: false,
+  forbidOnly: true,
+  retries: 1,
+  workers: 1,
+  timeout: 180_000,
+  expect: { timeout: 10_000 },
+  reporter: [['list'], ['html', { open: 'never' }]],
+  projects: [
+    {
+      name: 'api',
+      testDir: './tests/api',
+      use: {
+        baseURL: testing.apiURL,
+        extraHTTPHeaders: { Accept: 'application/json' },
+      },
+    },
+    {
+      name: 'ui',
+      testDir: './tests/ui',
+      use: browser,
+    },
+    {
+      name: 'circuits',
+      testDir: './tests/circuits',
+      use: browser,
+    },
+  ],
+});
