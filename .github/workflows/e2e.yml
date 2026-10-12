@@ -19,6 +19,7 @@ jobs:
     runs-on: dev
     outputs:
       pages: ${{ steps.pages.outcome }}
+      artifact: github-pages-${{ github.run_attempt }}
 
     steps:
       - name: Permisos del workspace
@@ -61,6 +62,7 @@ jobs:
         if: always() && steps.tests.conclusion != 'skipped' && hashFiles('playwright-report/index.html') != ''
         uses: actions/upload-pages-artifact@v3
         with:
+          name: github-pages-${{ github.run_attempt }}
           path: playwright-report
 
   deploy:
@@ -74,6 +76,8 @@ jobs:
       - name: Publicar
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ needs.e2e.outputs.artifact }}
 
       - name: Link
         run: |
