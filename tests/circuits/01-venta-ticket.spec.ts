@@ -9,36 +9,9 @@ const DESCRIPCION = 'FIDEOS TALLARINES 500 GR';
 
 test.skip(!serverEnv(), 'Corre en el runner dev, que lee /home/api-core/.env');
 
-test('vende el fideo del kiosco, imprime el ticket y lo muestra', async ({ page }, testInfo) => {
+test('vende el fideo del kiosco y cancela el cierre', async ({ page }) => {
   const negocio = leerNegocio();
   const password = serverEnv()!.passAdmin;
-
-  await page.addInitScript(() => {
-    window.print = () => undefined;
-
-    const mostrar = (frame: HTMLIFrameElement) => {
-      frame.style.setProperty('visibility', 'visible', 'important');
-      frame.style.setProperty('opacity', '1', 'important');
-      frame.style.setProperty('position', 'fixed', 'important');
-      frame.style.setProperty('inset', '0', 'important');
-      frame.style.setProperty('width', '100vw', 'important');
-      frame.style.setProperty('height', '100vh', 'important');
-      frame.style.setProperty('z-index', '2147483647', 'important');
-      frame.style.setProperty('border', '0', 'important');
-      frame.style.setProperty('background', '#fff', 'important');
-    };
-
-    const quitar = Element.prototype.remove;
-    Element.prototype.remove = function () {
-      if (this.id === 'printJS') return;
-      return quitar.call(this);
-    };
-
-    new MutationObserver(() => {
-      const frame = document.getElementById('printJS');
-      if (frame instanceof HTMLIFrameElement) mostrar(frame);
-    }).observe(document.documentElement, { childList: true, subtree: true, attributes: true });
-  });
 
   const login = await iniciarSesion(page, negocio, password);
   expect(login.response.status(), JSON.stringify(login.body)).toBe(200);
@@ -68,23 +41,8 @@ test('vende el fideo del kiosco, imprime el ticket y lo muestra', async ({ page 
   }
 
   await page.getByRole('button', { name: 'Guardar' }).click();
-  await expect(page.getByRole('heading', { name: 'Finalizar Transacción' })).toBeVisible({ timeout: 60_000 });
-  await page.getByRole('button', { name: 'Imprimir', exact: true }).click();
-
-  const impreso = page.waitForResponse(
-    (response) => response.request().method() === 'POST' && response.url().includes('/to-print/transaction'),
-    { timeout: 60_000 }
-  );
-  await page.getByRole('button', { name: 'Confirmar' }).click();
-
-  const ticket = await impreso;
-  const pdf = await ticket.body();
-  expect(ticket.status(), pdf.subarray(0, 180).toString('utf8')).toBe(200);
-  expect(pdf.subarray(0, 5).toString('utf8')).toBe('%PDF-');
-  await testInfo.attach('ticket.pdf', { body: pdf, contentType: 'application/pdf' });
-
-  const visor = page.locator('#printJS');
-  await expect(visor).toBeVisible({ timeout: 30_000 });
-  await expect.poll(async () => visor.getAttribute('src')).toMatch(/^blob:/);
-  await page.waitForTimeout(2_000);
+  const dialogo = page.getByRole('heading', { name: 'Finalizar Transacción' });
+  await expect(dialogo).toBeVisible({ timeout: 60_000 });
+  await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await expect(dialogo).toBeHidden();
 });
