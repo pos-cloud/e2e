@@ -36,8 +36,9 @@ test('inventaría el fideo del kiosco y deja el stock contado', async ({ page })
   await expect(linea.locator('.badge')).toHaveText(CANTIDAD, { timeout: 30_000 });
 
   await page.locator('.btn-action.enabled', { hasText: 'Procesar' }).click();
-  await expect(page).toHaveURL(/\/pos\/mostrador\/stock(?!\/)/, { timeout: 60_000 });
-  await expect(page.getByText('Transacciones de Stock pendientes')).toBeVisible();
+  await expect(page).toHaveURL(/\/pos\/mostrador\/stock(?:\?|$)/, { timeout: 60_000 });
+  await expect(page.getByText('Stock Pendientes', { exact: true })).toBeVisible();
+  await expect(page.getByText('Aún no hay transacciones pendientes')).toBeVisible();
 
   await page.goto('/entities/article-stock');
   await expect(page.locator('.datatable-title')).toHaveText('Inventario', { timeout: 60_000 });
