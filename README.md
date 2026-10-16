@@ -12,10 +12,10 @@ Corren en el runner `dev` de GitHub, el mismo servidor del entorno de testing. L
 ```text
 tests/setup/      registra un kiosco, una sola vez por corrida
 tests/support/    lo que comparten el alta y los circuitos
-tests/circuits/   un archivo por circuito. El nombre ordena: 01-inventario, 02-venta
+tests/circuits/   un archivo por circuito. El nombre ordena: 01-inventario, 02-abrir-caja, 03-venta, 04-cerrar-caja
 ```
 
-Cada corrida entra por `https://dev.poscloud.ar`, como lo haría una prueba manual. Registra un negocio cuyo nombre empieza con `e2e` y lo anota en el resumen. Los circuitos usan esa misma base. No se borra al terminar: en testing, ops las borra todos los días a las 5:00. El alta marca todas las integraciones y módulos de un kiosco. `01-stock-inventario` cuenta el producto `00001` (FIDEOS TALLARINES 500 GR) y deja el stock en 5. `02-venta-ticket` vende una unidad, cancela el diálogo de finalizar y comprueba que el stock quedó en 4.
+Cada corrida entra por `https://dev.poscloud.ar`, como lo haría una prueba manual. Registra un negocio cuyo nombre empieza con `e2e` y lo anota en el resumen. Los circuitos usan esa misma base. No se borra al terminar: en testing, ops las borra todos los días a las 5:00. El alta marca todas las integraciones y módulos de un kiosco. `01-stock-inventario` cuenta el producto `00001` (FIDEOS TALLARINES 500 GR) y deja el stock en 5. `02-abrir-caja` abre la caja con $1000 en efectivo. `03-venta-ticket` vende una unidad, cancela el diálogo de finalizar y comprueba que el stock quedó en 4. `04-cerrar-caja` cierra esa caja.
 
 ## En el runner
 
