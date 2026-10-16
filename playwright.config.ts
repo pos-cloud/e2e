@@ -10,6 +10,18 @@ const browser = {
   video: 'on' as const,
 };
 
+/** Cada circuito espera al anterior. Si uno falla, los siguientes no corren. */
+function circuito(name: string, file: string, after: string) {
+  return {
+    name,
+    dependencies: [after],
+    testDir: './tests/circuits',
+    testMatch: file,
+    fullyParallel: false,
+    use: browser,
+  };
+}
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
@@ -26,11 +38,9 @@ export default defineConfig({
       retries: 0,
       use: browser,
     },
-    {
-      name: 'circuits',
-      dependencies: ['registrar'],
-      testDir: './tests/circuits',
-      use: browser,
-    },
+    circuito('01-inventario', '01-stock-inventario.spec.ts', 'registrar'),
+    circuito('02-abrir-caja', '02-abrir-caja.spec.ts', '01-inventario'),
+    circuito('03-venta', '03-venta-ticket.spec.ts', '02-abrir-caja'),
+    circuito('04-cerrar-caja', '04-cerrar-caja.spec.ts', '03-venta'),
   ],
 });

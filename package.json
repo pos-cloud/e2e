@@ -5,8 +5,8 @@
   "description": "Pruebas end-to-end de POS Cloud contra el entorno de testing",
   "scripts": {
     "test": "playwright test",
-    "test:circuits": "playwright test --project=circuits",
-    "test:circuits:headed": "playwright test --project=circuits --headed",
+    "test:circuits": "playwright test --project=01-inventario --project=02-abrir-caja --project=03-venta --project=04-cerrar-caja",
+    "test:circuits:headed": "playwright test --project=01-inventario --project=02-abrir-caja --project=03-venta --project=04-cerrar-caja --headed",
     "report": "playwright show-report"
   },
   "devDependencies": {
