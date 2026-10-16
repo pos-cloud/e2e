@@ -1,15 +1,13 @@
 import { expect, test } from '@playwright/test';
 
 import { serverEnv } from '../../src/config';
+import { DESCRIPCION, PRODUCTO, STOCK_TRAS_VENTA, verStock } from '../support/fideo';
 import { iniciarSesion } from '../support/kiosco';
 import { leerNegocio } from '../support/negocio-corrido';
 
-const PRODUCTO = '00001';
-const DESCRIPCION = 'FIDEOS TALLARINES 500 GR';
-
 test.skip(!serverEnv(), 'Corre en el runner dev, que lee /home/api-core/.env');
 
-test('vende el fideo del kiosco y cancela el cierre', async ({ page }) => {
+test('vende el fideo y descuenta una unidad del inventario', async ({ page }) => {
   const negocio = leerNegocio();
   const password = serverEnv()!.passAdmin;
 
@@ -45,4 +43,6 @@ test('vende el fideo del kiosco y cancela el cierre', async ({ page }) => {
   await expect(dialogo).toBeVisible({ timeout: 60_000 });
   await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
   await expect(dialogo).toBeHidden();
+
+  await verStock(page, STOCK_TRAS_VENTA);
 });
