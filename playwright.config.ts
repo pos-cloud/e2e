@@ -40,7 +40,8 @@ export default defineConfig({
     },
     circuito('01-inventario', '01-stock-inventario.spec.ts', 'registrar'),
     circuito('02-abrir-caja', '02-abrir-caja.spec.ts', '01-inventario'),
-    circuito('03-venta', '03-venta-ticket.spec.ts', '02-abrir-caja'),
-    circuito('04-cerrar-caja', '04-cerrar-caja.spec.ts', '03-venta'),
+    circuito('03-venta', '03-venta-tres-scans.spec.ts', '02-abrir-caja'),
+    circuito('04-venta-descuento', '04-venta-descuento.spec.ts', '03-venta'),
+    circuito('05-cerrar-caja', '05-cerrar-caja.spec.ts', '04-venta-descuento'),
   ],
 });
