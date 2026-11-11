@@ -2,9 +2,9 @@ import { expect, Page } from '@playwright/test';
 
 export const PRODUCTO = '00001';
 export const DESCRIPCION = 'FIDEOS TALLARINES 500 GR';
-/** Lo cuenta el inventario. La venta siguiente saca una unidad. */
+/** Lo cuenta el inventario. La venta siguiente saca tres unidades. */
 export const STOCK_CONTADO = '5';
-export const STOCK_TRAS_VENTA = '4';
+export const STOCK_TRAS_VENTA = '2';
 
 export async function verStock(page: Page, cantidad: string): Promise<void> {
   await page.goto('/entities/article-stock');
