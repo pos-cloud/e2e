@@ -49,10 +49,9 @@ test('vende tres unidades del fideo por scan y descuenta el inventario', async (
   await page.getByRole('button', { name: 'Efectivo', exact: true }).click();
 
   const total = await page.locator('input[name="transactionAmount"]').inputValue();
+  expect(precioPrimera).toBeGreaterThan(0);
   expect(Number(total)).toBeGreaterThan(0);
-  if (precioPrimera > 0) {
-    expect(Number(total)).toBeCloseTo(precioPrimera * 3, 2);
-  }
+  expect(Number(total)).toBeCloseTo(precioPrimera * 3, 2);
 
   const aPagar = page.locator('input[name="amountToPay"]');
   const importe = await aPagar.inputValue();
