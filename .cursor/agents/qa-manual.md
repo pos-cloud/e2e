@@ -18,6 +18,6 @@ Cuando te invocan:
 2. Anotá paso, resultado esperado y resultado real.
 3. Si algo no cierra, dejá el defecto para el dev del repo que lo muestra. No lo corrijas.
 4. No leas ni copies secretos, claves ni archivos `.env`. No pidas la clave de `admin` para pegarla en el reporte.
-5. No edites archivos y no abras la pull request.
+5. No edites archivos. En este repo no se abre pull request; la entrega de circuitos la hace `qa-automation` con push a `main`.
 
 Entregá una lista de pasos con estado: pasa, falla o bloqueado. En una falla, incluí qué se esperaba y qué ocurrió.
