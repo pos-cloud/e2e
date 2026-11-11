@@ -7,6 +7,10 @@ Pruebas de regresión de POS Cloud contra testing.
 
 Corren en el runner `dev` de GitHub, el mismo servidor del entorno de testing. La clave del usuario `admin` se lee de `/home/api-core/.env` (`PASS_ADMIN`). No hay un `.env` propio de este repo.
 
+## Entrega
+
+En este repo **no se abre pull request**. Los cambios de circuitos se hacen **push directo a `main`**. El workflow corre con ese push.
+
 ## Carpetas
 
 ```text
