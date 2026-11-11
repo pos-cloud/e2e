@@ -5,9 +5,21 @@ import { DESCRIPCION, PRODUCTO, STOCK_TRAS_VENTA, verStock } from '../support/fi
 import { iniciarSesion } from '../support/kiosco';
 import { leerNegocio } from '../support/negocio-corrido';
 
+/** Precio es-AR del pipe currency (`$ 1.234,56`). */
+function parsePrecioUi(texto: string): number {
+  const solo = texto.replace(/[^\d.,]/g, '');
+  if (solo.includes(',') && solo.includes('.')) {
+    return Number(solo.replace(/\./g, '').replace(',', '.'));
+  }
+  if (solo.includes(',')) {
+    return Number(solo.replace(',', '.'));
+  }
+  return Number(solo);
+}
+
 test.skip(!serverEnv(), 'Corre en el runner dev, que lee /home/api-core/.env');
 
-test('vende el fideo y descuenta una unidad del inventario', async ({ page }) => {
+test('vende tres unidades del fideo por scan y descuenta el inventario', async ({ page }) => {
   const negocio = leerNegocio();
   const password = serverEnv()!.passAdmin;
 
@@ -22,15 +34,26 @@ test('vende el fideo y descuenta una unidad del inventario', async ({ page }) =>
 
   const filtro = page.getByPlaceholder('Filtrar Productos por Cód. de Barras');
   await expect(filtro).toBeVisible({ timeout: 60_000 });
-  await filtro.fill(PRODUCTO);
-  await filtro.press('Enter');
-  await expect(page.getByText(DESCRIPCION).first()).toBeVisible({ timeout: 30_000 });
+
+  const lineas = page.locator('.articles-container tbody tr', { hasText: DESCRIPCION });
+  for (let i = 1; i <= 3; i++) {
+    await filtro.fill(PRODUCTO);
+    await filtro.press('Enter');
+    await expect(lineas).toHaveCount(i, { timeout: 30_000 });
+  }
+
+  const precioPrimera = parsePrecioUi(await lineas.first().locator('td').nth(2).innerText());
 
   await page.locator('.btn-action.enabled', { hasText: 'Cobrar' }).click();
   await expect(page.getByRole('heading', { name: 'Forma de pago' })).toBeVisible({ timeout: 30_000 });
   await page.getByRole('button', { name: 'Efectivo', exact: true }).click();
 
   const total = await page.locator('input[name="transactionAmount"]').inputValue();
+  expect(Number(total)).toBeGreaterThan(0);
+  if (precioPrimera > 0) {
+    expect(Number(total)).toBeCloseTo(precioPrimera * 3, 2);
+  }
+
   const aPagar = page.locator('input[name="amountToPay"]');
   const importe = await aPagar.inputValue();
   if (!importe || Number(importe) === 0) {
